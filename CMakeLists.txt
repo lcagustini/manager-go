@@ -5,6 +5,7 @@ project(manager-go)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
-add_executable(manager-go ${CMAKE_SOURCE_DIR}/src/main.c)
+file(GLOB sources ${CMAKE_SOURCE_DIR}/src/systems/*)
+add_executable(manager-go ${CMAKE_SOURCE_DIR}/src/main.c ${sources})
 
 target_link_libraries(manager-go flecs raylib pthread dl m)

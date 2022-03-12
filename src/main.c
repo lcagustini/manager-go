@@ -1,51 +1,17 @@
 #include <raylib.h>
 #include <flecs.h>
 
-typedef struct {
-    double x, y;
-} position, velocity;
+#include <ecs/components.h>
+#include <ecs/systems.h>
 
-typedef struct {
-    double radius;
-    Color color;
-} circle;
-
-void move(ecs_iter_t *it) {
-    position *p = ecs_term(it, position, 1);
-    velocity *v = ecs_term(it, velocity, 2);
-
-    for (int i = 0; i < it->count; i ++) {
-        p[i].x += v[i].x * (double)it->delta_time;
-        p[i].y += v[i].y * (double)it->delta_time;
-
-        printf("%s moved to {.x = %f, .y = %f}\n", ecs_get_name(it->world, it->entities[i]), p[i].x, p[i].y);
-    }
-}
-
-void drawCircle(ecs_iter_t *it) {
-    position *p = ecs_term(it, position, 1);
-    circle *c = ecs_term(it, circle, 2);
-
-    for (int i = 0; i < it->count; i ++) {
-        DrawCircle(p[i].x, p[i].y, c[i].radius, c[i].color);
-    }
-}
-
-void beginDraw(ecs_iter_t *it) {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
-}
-
-void endDraw(ecs_iter_t *it) {
-    EndDrawing();
-}
+#define TARGET_FPS 60
 
 int main(int argc, char *argv[]) {
     const int screenWidth = 800;
     const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
-    SetTargetFPS(60);
+    InitWindow(screenWidth, screenHeight, "manager-go");
+    SetTargetFPS(TARGET_FPS);
 
     ecs_world_t *world = ecs_init_w_args(argc, argv);
 
@@ -72,7 +38,7 @@ int main(int argc, char *argv[]) {
     ecs_set(world, MyEntity, velocity, {10, 10});
     ecs_set(world, MyEntity, circle, {20, RED});
 
-    ecs_set_target_fps(world, 60);
+    ecs_set_target_fps(world, TARGET_FPS);
 
     while (!WindowShouldClose()) {
         ecs_progress(world, 0);
