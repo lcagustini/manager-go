@@ -12,3 +12,9 @@ typedef struct {
     double radius;
     Color color;
 } circle;
+
+#ifdef DECLARE_COMPONENTS
+ECS_COMPONENT_DECLARE(position);
+ECS_COMPONENT_DECLARE(velocity);
+ECS_COMPONENT_DECLARE(circle);
+#endif
