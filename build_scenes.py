@@ -6,6 +6,8 @@ import os
 def getNextLine(file):
     return file.readline().strip()
 
+print("#include \"scenes.c\"")
+
 print("typedef struct {")
 print("char *name;")
 print("int (*function)(void);")

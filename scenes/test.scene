@@ -1,12 +1,8 @@
 Test
 entities
     MyEntity
-        position { 10, 10 }
-        circle { 20 }
-    end
-    MyEntity2
-        position { 10, 10 }
-        velocity { 1, 1 }
+        position { 500, 10 }
+        velocity { -20, 5 }
         circle { 10 }
     end
 end
