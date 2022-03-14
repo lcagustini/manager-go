@@ -10,7 +10,6 @@ typedef struct {
 
 typedef struct {
     double radius;
-    Color color;
 } circle;
 
 #ifdef DECLARE_COMPONENTS

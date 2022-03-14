@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <flecs.h>
+#include <stdlib.h>
 
 #define DECLARE_COMPONENTS
 #include <ecs/components.h>
@@ -11,7 +12,7 @@
 ecs_world_t *scenes[MAX_SCENE_COUNT];
 int scenesCount = 0;
 
-int createScene() {
+int createBaseScene() {
     if (scenesCount >= MAX_SCENE_COUNT) return -1;
 
     ecs_world_t *world = ecs_init();
@@ -42,6 +43,17 @@ int createScene() {
     return currentIndex;
 }
 
+int deleteScene(int i) {
+    ecs_fini(scenes[i]);
+
+    scenesCount--;
+    for (; i < scenesCount; i++) {
+        scenes[i] = scenes[i+1];
+    }
+}
+
+#include "scenes.c"
+
 int main(int argc, char *argv[]) {
     const int screenWidth = 800;
     const int screenHeight = 450;
@@ -49,13 +61,7 @@ int main(int argc, char *argv[]) {
     InitWindow(screenWidth, screenHeight, "manager-go");
     SetTargetFPS(TARGET_FPS);
 
-    int id = createScene();
-
-    ECS_ENTITY(scenes[id], MyEntity, position, velocity);
-
-    ecs_set(scenes[id], MyEntity, position, {0, 0});
-    ecs_set(scenes[id], MyEntity, velocity, {10, 10});
-    ecs_set(scenes[id], MyEntity, circle, {20, RED});
+    createScene("Test");
 
     while (!WindowShouldClose()) {
         for (int i = 0; i < scenesCount; i++) {

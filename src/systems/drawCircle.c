@@ -6,6 +6,6 @@ void drawCircle(ecs_iter_t *it) {
     circle *c = ecs_term(it, circle, 2);
 
     for (int i = 0; i < it->count; i ++) {
-        DrawCircle(p[i].x, p[i].y, c[i].radius, c[i].color);
+        DrawCircle(p[i].x, p[i].y, c[i].radius, RED);
     }
 }
