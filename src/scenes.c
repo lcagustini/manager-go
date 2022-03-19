@@ -30,6 +30,7 @@ int createBaseScene() {
     ECS_SYSTEM(world, move, EcsOnUpdate, position, velocity);
     ECS_SYSTEM(world, beginDraw, EcsPreRender);
     ECS_SYSTEM(world, endDraw, EcsPostRender);
+    ECS_SYSTEM(world, drawSprite, EcsOnRender, position, rotation, scale, sprite);
 
     ecs_set_target_fps(world, TARGET_FPS);
 

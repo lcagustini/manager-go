@@ -16,6 +16,8 @@ int main(int argc, char *argv[]) {
     createScene("Splash");
 
     while (!WindowShouldClose()) {
+        if (scenesCount == 0) break;
+
         for (int i = 0; i < scenesCount; i++) {
             ecs_progress(scenes[i], 0);
         }

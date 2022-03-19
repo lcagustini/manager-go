@@ -17,6 +17,8 @@ typedef struct {
 } velocity;
 
 typedef struct {
+    Texture2D texture;
+    Color tint;
 } sprite;
 
 #ifdef DECLARE_COMPONENTS
