@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     InitWindow(screenWidth, screenHeight, "manager-go");
     SetTargetFPS(TARGET_FPS);
 
-    createScene("Test");
+    createScene("Splash");
 
     while (!WindowShouldClose()) {
         for (int i = 0; i < scenesCount; i++) {

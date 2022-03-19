@@ -1,19 +1,28 @@
 #include <raylib.h>
 
 typedef struct {
-    double x, y;
+    float x, y;
 } position;
 
 typedef struct {
-    double x, y;
+    float angle;
+} rotation;
+
+typedef struct {
+    float amount;
+} scale;
+
+typedef struct {
+    float x, y;
 } velocity;
 
 typedef struct {
-    double radius;
-} circle;
+} sprite;
 
 #ifdef DECLARE_COMPONENTS
 ECS_COMPONENT_DECLARE(position);
+ECS_COMPONENT_DECLARE(rotation);
+ECS_COMPONENT_DECLARE(scale);
 ECS_COMPONENT_DECLARE(velocity);
-ECS_COMPONENT_DECLARE(circle);
+ECS_COMPONENT_DECLARE(sprite);
 #endif

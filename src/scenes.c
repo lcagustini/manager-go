@@ -22,11 +22,12 @@ int createBaseScene() {
     ecs_set_pipeline(world, CustomPipeline);
 
     ECS_COMPONENT_DEFINE(world, position);
+    ECS_COMPONENT_DEFINE(world, rotation);
+    ECS_COMPONENT_DEFINE(world, scale);
     ECS_COMPONENT_DEFINE(world, velocity);
-    ECS_COMPONENT_DEFINE(world, circle);
+    ECS_COMPONENT_DEFINE(world, sprite);
 
     ECS_SYSTEM(world, move, EcsOnUpdate, position, velocity);
-    ECS_SYSTEM(world, drawCircle, EcsOnRender, position, circle);
     ECS_SYSTEM(world, beginDraw, EcsPreRender);
     ECS_SYSTEM(world, endDraw, EcsPostRender);
 
@@ -45,5 +46,25 @@ int deleteScene(int i) {
     scenesCount--;
     for (; i < scenesCount; i++) {
         scenes[i] = scenes[i+1];
+    }
+}
+
+#include "scenes/splash.c"
+#include "scenes/test.c"
+
+struct {
+    char *name;
+    int (*function)(void);
+} sceneDefinitions[] = {
+    { "Splash", createSceneSplash },
+    { "Test", createSceneTest },
+};
+int sceneDefinitionsCount = 1;
+
+int createScene(char *name) {
+    for (int i = 0; i < sceneDefinitionsCount; i++) {
+        if (strcmp(sceneDefinitions[i].name, name) == 0) {
+            return sceneDefinitions[i].function();
+        }
     }
 }

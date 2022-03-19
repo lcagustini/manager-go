@@ -1,8 +1,0 @@
-Test
-entities
-    MyEntity
-        position { 500, 10 }
-        velocity { -20, 5 }
-        circle { 10 }
-    end
-end
