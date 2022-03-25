@@ -3,6 +3,7 @@
 #define DECLARE_COMPONENTS
 #include <ecs/components.h>
 #include <ecs/scenes.h>
+#define DECLARE_TAGS
 #include <ecs/systems.h>
 
 ecs_world_t *scenes[MAX_SCENE_COUNT];
@@ -13,24 +14,19 @@ int createBaseScene() {
 
     ecs_world_t *world = ecs_init();
 
-    ECS_TAG(world, EcsInputGather);
-    ECS_TAG(world, EcsInputProcess);
-    ECS_TAG(world, EcsPreRender);
-    ECS_TAG(world, EcsOnRender);
-    ECS_TAG(world, EcsPostRender);
+    ECS_TAG_DEFINE(world, EcsInputGather);
+    ECS_TAG_DEFINE(world, EcsInputProcess);
+    ECS_TAG_DEFINE(world, EcsPreRender);
+    ECS_TAG_DEFINE(world, EcsOnRender);
+    ECS_TAG_DEFINE(world, EcsPostRender);
     ECS_PIPELINE(world, CustomPipeline, EcsInputGather, EcsInputProcess, EcsPreUpdate, EcsOnUpdate, EcsOnValidate, EcsPostUpdate, EcsPreRender, EcsOnRender, EcsPostRender);
     ecs_set_pipeline(world, CustomPipeline);
 
-    ECS_COMPONENT_DEFINE(world, position);
-    ECS_COMPONENT_DEFINE(world, rotation);
-    ECS_COMPONENT_DEFINE(world, scale);
+    ECS_COMPONENT_DEFINE(world, transform);
+    ECS_COMPONENT_DEFINE(world, rectTransform);
     ECS_COMPONENT_DEFINE(world, velocity);
     ECS_COMPONENT_DEFINE(world, sprite);
-
-    ECS_SYSTEM(world, move, EcsOnUpdate, position, velocity);
-    ECS_SYSTEM(world, beginDraw, EcsPreRender);
-    ECS_SYSTEM(world, endDraw, EcsPostRender);
-    ECS_SYSTEM(world, drawSprite, EcsOnRender, position, rotation, scale, sprite);
+    ECS_COMPONENT_DEFINE(world, splashSprite);
 
     ecs_set_target_fps(world, TARGET_FPS);
 
