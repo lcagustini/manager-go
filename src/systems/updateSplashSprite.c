@@ -1,5 +1,6 @@
 #include <flecs.h>
 #include <ecs/components.h>
+#include <ecs/scenes.h>
 
 void updateSplashSprite(ecs_iter_t *it) {
     splashSprite *ss = ecs_term(it, splashSprite, 1);
@@ -15,5 +16,8 @@ void updateSplashSprite(ecs_iter_t *it) {
     if (current_index != -1) {
         ss[current_index].timer += it->delta_time;
         s[current_index].tint = Fade(s[current_index].tint, (-4 * ss[current_index].timer * ss[current_index].timer)/(ss[current_index].time * ss[current_index].time) + (4 * ss[current_index].timer)/ss[current_index].time);
+    }
+    else {
+        switchScene("MainMenu");
     }
 }

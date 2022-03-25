@@ -3,10 +3,12 @@
 #define MAX_SCENE_COUNT 10
 #define TARGET_FPS 60
 
-extern ecs_world_t *scenes[MAX_SCENE_COUNT];
-extern int scenesCount;
+extern ecs_world_t *currentScene;
 
-int createScene(char *name);
+void createScene(char *name);
+void switchScene(char *name);
+void processSceneSwitch();
+void deleteScene();
 
 #ifdef DECLARE_TAGS
 ECS_TAG_DECLARE(EcsInputGather);

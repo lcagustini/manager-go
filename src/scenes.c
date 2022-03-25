@@ -6,62 +6,70 @@
 #define DECLARE_TAGS
 #include <ecs/systems.h>
 
-ecs_world_t *scenes[MAX_SCENE_COUNT];
-int scenesCount;
+ecs_world_t *currentScene = NULL;
 
-int createBaseScene() {
-    if (scenesCount >= MAX_SCENE_COUNT) return -1;
+void createBaseScene() {
+    currentScene = ecs_init();
 
-    ecs_world_t *world = ecs_init();
+    ECS_TAG_DEFINE(currentScene, EcsInputGather);
+    ECS_TAG_DEFINE(currentScene, EcsInputProcess);
+    ECS_TAG_DEFINE(currentScene, EcsPreRender);
+    ECS_TAG_DEFINE(currentScene, EcsOnRender);
+    ECS_TAG_DEFINE(currentScene, EcsPostRender);
+    ECS_PIPELINE(currentScene, CustomPipeline, EcsInputGather, EcsInputProcess, EcsPreUpdate, EcsOnUpdate, EcsOnValidate, EcsPostUpdate, EcsPreRender, EcsOnRender, EcsPostRender);
+    ecs_set_pipeline(currentScene, CustomPipeline);
 
-    ECS_TAG_DEFINE(world, EcsInputGather);
-    ECS_TAG_DEFINE(world, EcsInputProcess);
-    ECS_TAG_DEFINE(world, EcsPreRender);
-    ECS_TAG_DEFINE(world, EcsOnRender);
-    ECS_TAG_DEFINE(world, EcsPostRender);
-    ECS_PIPELINE(world, CustomPipeline, EcsInputGather, EcsInputProcess, EcsPreUpdate, EcsOnUpdate, EcsOnValidate, EcsPostUpdate, EcsPreRender, EcsOnRender, EcsPostRender);
-    ecs_set_pipeline(world, CustomPipeline);
+    ECS_COMPONENT_DEFINE(currentScene, transform);
+    ECS_COMPONENT_DEFINE(currentScene, rectTransform);
+    ECS_COMPONENT_DEFINE(currentScene, velocity);
+    ECS_COMPONENT_DEFINE(currentScene, sprite);
+    ECS_COMPONENT_DEFINE(currentScene, splashSprite);
 
-    ECS_COMPONENT_DEFINE(world, transform);
-    ECS_COMPONENT_DEFINE(world, rectTransform);
-    ECS_COMPONENT_DEFINE(world, velocity);
-    ECS_COMPONENT_DEFINE(world, sprite);
-    ECS_COMPONENT_DEFINE(world, splashSprite);
-
-    ecs_set_target_fps(world, TARGET_FPS);
-
-    int currentIndex = scenesCount;
-    scenes[currentIndex] = world;
-    scenesCount++;
-
-    return currentIndex;
-}
-
-int deleteScene(int i) {
-    ecs_fini(scenes[i]);
-
-    scenesCount--;
-    for (; i < scenesCount; i++) {
-        scenes[i] = scenes[i+1];
-    }
+    ecs_set_target_fps(currentScene, TARGET_FPS);
 }
 
 #include "scenes/splash.c"
-#include "scenes/test.c"
+#include "scenes/mainMenu.c"
 
 struct {
     char *name;
     int (*function)(void);
 } sceneDefinitions[] = {
     { "Splash", createSceneSplash },
-    { "Test", createSceneTest },
+    { "MainMenu", createSceneMainMenu },
 };
-int sceneDefinitionsCount = 1;
+int sceneDefinitionsCount = 2;
 
-int createScene(char *name) {
+void createScene(char *name) {
     for (int i = 0; i < sceneDefinitionsCount; i++) {
         if (strcmp(sceneDefinitions[i].name, name) == 0) {
-            return sceneDefinitions[i].function();
+            createBaseScene();
+            sceneDefinitions[i].function();
+            return;
         }
     }
+}
+
+char *sceneToSwitchTo = NULL;
+void switchScene(char *name) {
+    if (currentScene != NULL) {
+        sceneToSwitchTo = name;
+    }
+    else {
+        createScene(name);
+    }
+}
+
+void processSceneSwitch() {
+    if (sceneToSwitchTo != NULL) {
+        deleteScene();
+        createScene(sceneToSwitchTo);
+        sceneToSwitchTo = NULL;
+    }
+}
+
+void deleteScene() {
+    ecs_fini(currentScene);
+
+    currentScene = NULL;
 }

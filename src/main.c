@@ -16,15 +16,15 @@ int main(int argc, char *argv[]) {
     createScene("Splash");
 
     while (!WindowShouldClose()) {
-        if (scenesCount == 0) break;
+        if (currentScene == NULL) break;
 
-        for (int i = 0; i < scenesCount; i++) {
-            ecs_progress(scenes[i], 0);
-        }
+        ecs_progress(currentScene, 0);
+
+        processSceneSwitch();
     }
 
-    for (int i = 0; i < scenesCount; i++) {
-        ecs_fini(scenes[i]);
+    if (currentScene != NULL) {
+        deleteScene();
     }
     CloseWindow();
 

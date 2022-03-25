@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(manager-go)
 
+#set(CMAKE_BUILD_TYPE Debug)
+
 include_directories(${CMAKE_SOURCE_DIR}/include)
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
